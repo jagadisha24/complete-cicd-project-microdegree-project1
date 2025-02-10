@@ -76,17 +76,38 @@ pipeline {
         
         stage('Deploy To Kubernetes') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: 'microdegree-cluster', contextName: '', credentialsId: 'kube', namespace: 'microdegree', restrictKubeConfigAccess: false, serverUrl: 'https://9E109175FB941EB8A2EF1F59797AC03B.gr7.ap-south-1.eks.amazonaws.com')                sh "kubectl get pods -n microdegree"
-                    sh "kubectl apply -f deployment.yml -n microdegree"
+                script {
+                    withKubeConfig(
+                        caCertificate: '', 
+                        clusterName: 'microdegree-cluster', 
+                        contextName: '', 
+                        credentialsId: 'kube', 
+                        namespace: 'microdegree', 
+                        restrictKubeConfigAccess: false, 
+                        serverUrl: 'https://9E109175FB941EB8A2EF1F59797AC03B.gr7.ap-south-1.eks.amazonaws.com'
+                    ) { 
+                        sh "kubectl get pods -n microdegree"
+                        sh "kubectl apply -f deployment.yml -n microdegree"
+                    }
                 }
             }
         }
 
         stage('Verify the Deployment') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: 'microdegree-cluster', contextName: '', credentialsId: 'kube', namespace: 'microdegree', restrictKubeConfigAccess: false, serverUrl: 'https://9E109175FB941EB8A2EF1F59797AC03B.gr7.ap-south-1.eks.amazonaws.com') {
-                    sh "kubectl get pods -n microdegree"
-                    sh "kubectl get svc -n microdegree"
+                script {
+                    withKubeConfig(
+                        caCertificate: '', 
+                        clusterName: 'microdegree-cluster', 
+                        contextName: '', 
+                        credentialsId: 'kube', 
+                        namespace: 'microdegree', 
+                        restrictKubeConfigAccess: false, 
+                        serverUrl: 'https://9E109175FB941EB8A2EF1F59797AC03B.gr7.ap-south-1.eks.amazonaws.com'
+                    ) { 
+                        sh "kubectl get pods -n microdegree"
+                        sh "kubectl get svc -n microdegree"
+                    }
                 }
             }
         }
